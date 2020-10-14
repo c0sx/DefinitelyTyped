@@ -79,6 +79,27 @@ app.post<never, { foo: string }, { bar: number }>('/', (req, res) => {
     req.body.baz; // $ExpectError
 });
 
+// Send file options type
+app.post("/", (req, res) => {
+    const headers = {
+        "Content-Disposition": `attachment; filename="file.txt"`
+    };
+
+    const filename = "file.txt";
+
+    // with filename only
+    res.sendFile(filename);
+
+    // with options
+    res.sendFile(filename, { maxAge: 1000, headers });
+    res.sendFile(filename, { headers: "bar" }); // $ExpectError
+    res.sendFile(filename, { foo: "baz" }); // $ExpectError
+
+    // with error callback
+    res.sendFile(filename, (err => console.error(err)));
+    res.sendFile(filename, { headers }, (err => console.error(err)));
+});
+
 app.engine('ntl', (_filePath, _options, callback) => {
     callback(new Error("not found."));
 });

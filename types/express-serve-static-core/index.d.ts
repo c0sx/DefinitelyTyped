@@ -501,6 +501,13 @@ export interface MediaType {
 
 export type Send<ResBody = any, T = Response<ResBody>> = (body?: ResBody) => T;
 
+export interface SendFileOptions {
+    maxAge?: number;
+    root?: string;
+    headers?: { [key: string]: string };
+    dotfiles?: "allow" | "deny" | "ignore";
+}
+
 export interface Response<ResBody = any, StatusCode extends number = number> extends http.ServerResponse, Express.Response {
     /**
      * Set status `code`.
@@ -608,8 +615,8 @@ export interface Response<ResBody = any, StatusCode extends number = number> ext
      *
      * @api public
      */
-    sendFile(path: string, fn?: Errback): void;
-    sendFile(path: string, options: any, fn?: Errback): void;
+    sendFile(path: string, fn?: SendFileOptions | Errback): void;
+    sendFile(path: string, options?: SendFileOptions, fn?: Errback): void;
 
     /**
      * @deprecated Use sendFile instead.
